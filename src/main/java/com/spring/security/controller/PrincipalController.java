@@ -16,19 +16,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class PrincipalController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/principal")
+    @GetMapping("/notsecured")
     public String getPrincipal() {
         return "Hello, this is the principal endpoint not secured!";
     }
 
-    @GetMapping("/principal2")
+    @GetMapping("/secured")
     public String getPrincipal2() {
         return "Hello, this is the principal endpoint secured!";
     }
