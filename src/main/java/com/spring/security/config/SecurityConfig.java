@@ -43,6 +43,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/v1/notsecured").permitAll();
+                    authorize.requestMatchers("/api/v1/admin").hasRole("ADMIN");
+                    authorize.requestMatchers("/api/v1/user").hasAnyRole("ADMIN", "USER");
+                    authorize.requestMatchers("/api/v1/admin").hasAnyRole("ADMIN", "USER", "INVITED");
                     authorize.anyRequest().authenticated();
 
                 })
