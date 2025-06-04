@@ -6,16 +6,20 @@ import com.spring.security.models.RoleEntity;
 import com.spring.security.models.UserEntity;
 import com.spring.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserEntity createUser(CreateUserDto createUserDto) {
@@ -26,7 +30,7 @@ public class UserServiceImp implements UserService{
         UserEntity userEntity = UserEntity.builder()
                 .email(createUserDto.email())
                 .username(createUserDto.username())
-                .password(createUserDto.password())
+                .password(passwordEncoder.encode(createUserDto.password()))
                 .roles(roles)
                 .build();
         userRepository.save(userEntity);
