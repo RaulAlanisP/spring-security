@@ -4,19 +4,19 @@ import com.spring.security.dto.CreateUserDto;
 import com.spring.security.models.UserEntity;
 import com.spring.security.service.UserService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class PrincipalController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public PrincipalController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/notsecured")
     public String getPrincipal() {
@@ -30,14 +30,14 @@ public class PrincipalController {
 
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<UserEntity> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         UserEntity userEntity = userService.createUser(createUserDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<?> deleteUser(@RequestParam String id) {
+    public ResponseEntity<String> deleteUser(@RequestParam String id) {
         if (userService.deleteUser(id)) {
             return ResponseEntity.ok("User deleted successfully");
         } else {

@@ -7,7 +7,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +23,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private JwtUtils jwtUtils;
 
-    public JwtAuthenticationFilter (JwtUtils jwtUtils) {
+    public JwtAuthenticationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
@@ -42,9 +41,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             password = userEntity.getPassword();
 
 
-
         } catch (Exception e) {
-            throw new AuthenticationException("Authentication failed") {};
+            throw new AuthenticationException("Authentication failed") {
+            };
         }
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);

@@ -1,9 +1,9 @@
 package com.spring.security.config;
 
+import com.spring.security.models.EnumRole;
 import com.spring.security.security.JwtAuthenticationFilter;
 import com.spring.security.security.JwtAuthorizationFilter;
 import com.spring.security.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,14 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
-    JwtAuthorizationFilter jwtAuthorizationFilter;
+    public SecurityConfig(UserDetailsService userDetailsService, JwtUtils jwtUtils, JwtAuthorizationFilter jwtAuthorizationFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtils = jwtUtils;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
@@ -43,35 +44,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/v1/notsecured").permitAll();
-                    authorize.requestMatchers("/api/v1/admin").hasRole("ADMIN");
-                    authorize.requestMatchers("/api/v1/user").hasAnyRole("ADMIN", "USER");
-                    authorize.requestMatchers("/api/v1/admin").hasAnyRole("ADMIN", "USER", "INVITED");
-                    authorize.anyRequest().authenticated();
+                    authorize.requestMatchers("/api/v1/user").hasAnyRole(
+                            EnumRole.ADMIN.name(), EnumRole.USER.name());
+                    authorize.requestMatchers("/api/v1/invited").hasAnyRole(
+                            EnumRole.ADMIN.name(), EnumRole.USER.name(), EnumRole.INVITED.name());
+                    authorize.anyRequest().hasRole(EnumRole.ADMIN.name());
 
                 })
-                .sessionManagement(session -> {
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-//    @Bean
-//    UserDetailsService userDetailsService() {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("user")
-//                .password("password") // indicates no password encoder is used
-//                .roles()
-//                .build());
-//
-//        return manager;
-//    }
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-//        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

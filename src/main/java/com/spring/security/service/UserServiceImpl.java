@@ -5,7 +5,6 @@ import com.spring.security.models.EnumRole;
 import com.spring.security.models.RoleEntity;
 import com.spring.security.models.UserEntity;
 import com.spring.security.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserEntity createUser(CreateUserDto createUserDto) {
