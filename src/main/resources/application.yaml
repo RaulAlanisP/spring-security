@@ -3,8 +3,8 @@ spring:
     name: spring-security
   datasource:
     url: jdbc:mysql://localhost:3306/securitydb
-    username: raul
-    password: password1
+    username: root
+    password: password
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -16,4 +16,4 @@ jwt:
   secret:
     key: e3b1c9f5a7d8e4b9c0f123456789abcd9876543210fedcba1234567890abcdef
   time:
-    expiration: 36000 # 1 hour in seconds
+    expiration: 360000 # 1 hour in seconds
