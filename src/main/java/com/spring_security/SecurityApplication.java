@@ -4,7 +4,6 @@ import com.spring_security.models.EnumRole;
 import com.spring_security.models.RoleEntity;
 import com.spring_security.models.UserEntity;
 import com.spring_security.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,11 +19,14 @@ public class SecurityApplication {
         SpringApplication.run(SecurityApplication.class, args);
     }
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public SecurityApplication(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
 
     @Bean
     CommandLineRunner init() {

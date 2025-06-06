@@ -2,7 +2,7 @@ spring:
   application:
     name: spring-security
   datasource:
-    url: jdbc:mysql://localhost:3307/securitydb
+    url: jdbc:mysql://localhost:3306/securitydb
     username: raul
     password: password1
     driverClassName: com.mysql.cj.jdbc.Driver
