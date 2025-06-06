@@ -12,13 +12,13 @@ COPY ./.mvn /app/.mvn
 COPY ./mvnw /app
 
 # DESCARGAR LAS DEPENDENCIAS
-RUN chmod +x ./mvnw dependency:go-offline
+RUN chown +x ./mvnw && ./mvnw dependency:go-offline
 
 # COPIAR EL CODIGO FUENTE DENTRO DEL CONTENEDOR
 COPY ./src /app/src
 
 # CONSTRUIR NUESTRA APLICACION
-RUN chmod +x ./mvnw clean install -DskipTests
+RUN ./mvnw clean install -DskipTests
 
 # LEVANTAR NUESTRA APLICACION CUANDO EL CONTENEDOR INICIE
 ENTRYPOINT ["java","-jar","/app/target/security-0.0.1-SNAPSHOT.jar"]
